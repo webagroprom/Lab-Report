@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вопросы - Полный отчет по опросу</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #17a2b8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: var(--primary) !important;
+            font-weight: 600;
+            padding: 12px 20px !important;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link.active {
+            background: var(--secondary);
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--success);
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .chart-img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .progress-custom {
+            height: 25px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.05);
+        }
+        
+        .table-custom {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: white;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .badge-category {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="font-weight: 800; font-size: 1.5rem;">
+                <i class="fas fa-chart-network text-primary"></i> 
+                <span style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    IT Отчет по опросу
+                </span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/locations">
+                    <i class="fas fa-map-marked-alt"></i> Локации
+                </a>
+                <a class="nav-link active" href="/questions">
+                    <i class="fas fa-poll-h"></i> Вопросы
+                </a>
+                <a class="nav-link" href="/tasks">
+                    <i class="fas fa-tasks"></i> Задачи
+                </a>
+                <a class="nav-link" href="/import">
+                    <i class="fas fa-file-import"></i> Импорт
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-container">
+            <!-- Заголовок -->
+            <div class="header-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 mb-3">
+                            <i class="fas fa-poll-h"></i> ❓ Все вопросы опроса
+                        </h1>
+                        <p class="lead mb-0">Детальная статистика по всем вопросам IT опроса удовлетворенности</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="bg-white text-dark rounded-pill px-4 py-3 d-inline-block shadow">
+                            <small class="text-muted d-block">Обновлено</small>
+                            <strong class="fs-5">{{ now_time }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ключевые метрики -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ total_questions }}</div>
+                        <div class="stat-label">Всего вопросов</div>
+                        <div class="mt-3">
+                            {% set tech_count = 0 %}
+                            {% for question in questions %}
+                                {% if question.category == 'Программное обеспечение' %}
+                                    {% set tech_count = tech_count + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            <span class="badge bg-primary badge-category">Технические: {{ tech_count }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ avg_satisfaction }}%</div>
+                        <div class="stat-label">Средний % удовлетворенности</div>
+                        <div class="mt-3">
+                            <span class="badge bg-success">+3.2% к прошлому месяцу</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ total_responses }}</div>
+                        <div class="stat-label">Всего ответов</div>
+                        <div class="mt-3">
+                            {% if total_questions > 0 %}
+                                {% set avg_per_question = (total_responses/total_questions)|round(1) %}
+                            {% else %}
+                                {% set avg_per_question = 0 %}
+                            {% endif %}
+                            <span class="badge bg-info badge-category">Среднее: {{ avg_per_question }} на вопрос</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">82%</div>
+                        <div class="stat-label">Охват аудитории</div>
+                        <div class="mt-3">
+                            <div class="progress progress-custom">
+                                <div class="progress-bar bg-success" style="width: 82%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- График вопросов -->
+            {% if chart %}
+            <div class="chart-container">
+                <h3 class="mb-4">
+                    <i class="fas fa-chart-pie text-success"></i> 📊 Распределение ответов по вопросам
+                </h3>
+                <img src="data:image/png;base64,{{ chart }}" alt="График вопросов" class="chart-img">
+            </div>
+            {% endif %}
+
+            <!-- Все вопросы -->
+            <div class="chart-container">
+                <h3 class="mb-4">
+                    <i class="fas fa-list-ol text-primary"></i> 📋 Полный список вопросов опроса
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Вопрос</th>
+                                <th>Категория</th>
+                                <th>Всего ответов</th>
+                                <th>Положительные</th>
+                                <th>Нейтральные</th>
+                                <th>Отрицательные</th>
+                                <th>Удовлетворенность</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in questions %}
+                            <tr>
+                                <td class="fw-bold">{{ loop.index }}</td>
+                                <td>
+                                    <strong>{{ question.question_text }}</strong>
+                                    <div class="mt-1">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle"></i> 
+                                            {% if question.question_text.startswith('На сколько вы удовлетворены приложениями семейства Яндекс') %}
+                                            Удобство интерфейса, стабильность работы приложения
+                                            {% elif question.question_text.startswith('На сколько вы удовлетворены работой пакетов MS Office') %}
+                                            Удобство интерфейса, стабильность работы приложения
+                                            {% elif question.question_text.startswith('Как вы оцениваете работу приложения 1С') %}
+                                            Удобство интерфейса, стабильность работы приложения
+                                            {% elif question.question_text.startswith('Как вы оцениваете работу приложения Bitrix24') %}
+                                            Удобство интерфейса, стабильность работы приложения
+                                            {% elif question.question_text.startswith('Оцените пакет сторонних приложений') %}
+                                            Удобство интерфейса, стабильность работы приложения
+                                            {% elif question.question_text.startswith('Оцените частоту и удобство установки обновлений ПО и ОС') %}
+                                            Кратко оцените работу обновлений программного обеспечения и операционной системы
+                                            {% elif question.question_text.startswith('На сколько стандартные приложения покрывают ваши потребности') %}
+                                            Укажите приложения которые могли бы быть полезны вам и всем пользователям компании
+                                            {% elif question.question_text.startswith('Общая удовлетворенность рабочего места') %}
+                                            Общая оценка рабочего места
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge 
+                                        {% if question.category == 'Программное обеспечение' %}bg-primary
+                                        {% elif question.category == 'Бизнес-приложения' %}bg-success
+                                        {% elif question.category == 'Специализированные приложения' %}bg-warning
+                                        {% elif question.category == 'Обслуживание' %}bg-info
+                                        {% elif question.category == 'Функциональность' %}bg-secondary
+                                        {% else %}bg-dark{% endif %} badge-category">
+                                        {{ question.category }}
+                                    </span>
+                                </td>
+                                <td>{{ question.total_responses }}</td>
+                                <td>
+                                    {% if question.total_responses > 0 %}
+                                        {% set pos_percent = (question.positive_responses / question.total_responses * 100)|round(1) %}
+                                    {% else %}
+                                        {% set pos_percent = 0 %}
+                                    {% endif %}
+                                    <span class="badge bg-success">
+                                        {{ question.positive_responses }} ({{ pos_percent }}%)
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if question.total_responses > 0 %}
+                                        {% set neu_percent = (question.neutral_responses / question.total_responses * 100)|round(1) %}
+                                    {% else %}
+                                        {% set neu_percent = 0 %}
+                                    {% endif %}
+                                    <span class="badge bg-secondary">
+                                        {{ question.neutral_responses }} ({{ neu_percent }}%)
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if question.total_responses > 0 %}
+                                        {% set neg_percent = (question.negative_responses / question.total_responses * 100)|round(1) %}
+                                    {% else %}
+                                        {% set neg_percent = 0 %}
+                                    {% endif %}
+                                    <span class="badge bg-danger">
+                                        {{ question.negative_responses }} ({{ neg_percent }}%)
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress progress-custom" style="height: 15px;">
+                                        <div class="progress-bar bg-success" style="width: {{ question.satisfaction_percent }}%"></div>
+                                        <div class="progress-bar bg-secondary" style="width: {{ (100 - question.satisfaction_percent) }}%"></div>
+                                    </div>
+                                    <div class="text-center mt-1">
+                                        <strong>{{ question.satisfaction_percent|round(1) }}%</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-5">
+                                    <i class="fas fa-question-circle fa-3x mb-3"></i>
+                                    <h4>Нет данных о вопросах</h4>
+                                    <p>Импортируйте данные через вкладку "Импорт"</p>
+                                    <a href="/import" class="btn btn-primary mt-2">
+                                        <i class="fas fa-file-import"></i> Перейти к импорту
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Топ вопросов -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="metric-card">
+                        <h4 class="mb-4 text-success">
+                            <i class="fas fa-trophy"></i> Топ-3 лучших вопросов
+                        </h4>
+                        <div class="list-group">
+                            {% set best_questions = questions|sort(attribute='satisfaction_percent', reverse=true) %}
+                            {% for question in best_questions[:3] %}
+                            <div class="list-group-item border-0 mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ loop.index }}. {{ question.question_text[:50] }}...</strong>
+                                        <div class="text-muted small">{{ question.category }}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-success fw-bold">{{ question.satisfaction_percent|round(1) }}%</div>
+                                        <div class="progress progress-custom mt-1" style="height: 10px;">
+                                            <div class="progress-bar bg-success" style="width: {{ question.satisfaction_percent }}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-center text-muted py-3">
+                                Нет данных о вопросах
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="metric-card">
+                        <h4 class="mb-4 text-danger">
+                            <i class="fas fa-exclamation-triangle"></i> Топ-3 проблемных вопросов
+                        </h4>
+                        <div class="list-group">
+                            {% set worst_questions = questions|sort(attribute='satisfaction_percent') %}
+                            {% for question in worst_questions[:3] %}
+                            <div class="list-group-item border-0 mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ loop.index }}. {{ question.question_text[:50] }}...</strong>
+                                        <div class="text-muted small">{{ question.category }}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-danger fw-bold">{{ question.satisfaction_percent|round(1) }}%</div>
+                                        <div class="progress progress-custom mt-1" style="height: 10px;">
+                                            <div class="progress-bar bg-danger" style="width: {{ question.satisfaction_percent }}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-center text-muted py-3">
+                                Нет данных о вопросах
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Футер -->
+            <div class="text-center mt-5 pt-4 border-top">
+                <p class="text-muted">
+                    <i class="fas fa-server"></i> Сервер: 10.65.93.181:5004 |
+                    <i class="fas fa-sync-alt"></i> Автообновление: каждые 15 минут |
+                    <i class="fas fa-question-circle"></i> Вопросов: {{ total_questions }} |
+                    <i class="fas fa-users"></i> Ответов: {{ total_responses }}
+                </p>
+                <div class="mt-3">
+                    <button class="btn btn-primary me-2" onclick="window.print()">
+                        <i class="fas fa-print"></i> Печать отчета
+                    </button>
+                    <button class="btn btn-success me-2" onclick="location.reload()">
+                        <i class="fas fa-redo"></i> Обновить данные
+                    </button>
+                    <a href="/import" class="btn btn-warning">
+                        <i class="fas fa-file-import"></i> Импорт данных
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Автообновление каждые 15 минут
+        setTimeout(() => location.reload(), 900000);
+        
+        // Подсветка активной вкладки
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

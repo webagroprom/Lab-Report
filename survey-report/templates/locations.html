@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Локации - Полный отчет по опросу</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #17a2b8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-link {
+            color: var(--primary) !important;
+            font-weight: 600;
+            padding: 12px 20px !important;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link.active {
+            background: var(--secondary);
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .header-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--success);
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .location-card {
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .location-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        .location-office { border-color: var(--secondary); }
+        .location-factory { border-color: var(--success); }
+        .location-home { border-color: var(--danger); }
+        .location-warehouse { border-color: var(--warning); }
+        .location-default { border-color: var(--info); }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .chart-img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+        
+        .progress-custom {
+            height: 25px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .progress-custom .progress-bar {
+            border-radius: 12px;
+            background: linear-gradient(90deg, var(--success), var(--info));
+        }
+        
+        .badge-category {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .table-custom {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: white;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 20px;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="font-weight: 800; font-size: 1.5rem;">
+                <i class="fas fa-chart-network text-primary"></i> 
+                <span style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    IT Отчет по опросу
+                </span>
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link active" href="/locations">
+                    <i class="fas fa-map-marked-alt"></i> Локации
+                </a>
+                <a class="nav-link" href="/questions">
+                    <i class="fas fa-poll-h"></i> Вопросы
+                </a>
+                <a class="nav-link" href="/tasks">
+                    <i class="fas fa-tasks"></i> Задачи
+                </a>
+                <a class="nav-link" href="/import">
+                    <i class="fas fa-file-import"></i> Импорт
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-container">
+            <!-- Заголовок -->
+            <div class="header-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 mb-3">
+                            <i class="fas fa-map-marked-alt"></i> 📍 Все локации
+                        </h1>
+                        <p class="lead mb-0">Детальная статистика по всем локациям, участвовавшим в опросе IT удовлетворенности</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="bg-white text-dark rounded-pill px-4 py-3 d-inline-block shadow">
+                            <small class="text-muted d-block">Обновлено</small>
+                            <strong class="fs-5">{{ now_time }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ключевые метрики -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ locations|length }}</div>
+                        <div class="stat-label">Всего локаций</div>
+                        <div class="mt-3">
+                            {% set office_count = locations|selectattr('category', 'equalto', 'office')|list|length %}
+                            {% set factory_count = locations|selectattr('category', 'equalto', 'factory')|list|length %}
+                            <span class="badge bg-primary badge-category">�� Офисы: {{ office_count }}</span>
+                            <span class="badge bg-success badge-category mt-2 d-block">🏭 Заводы: {{ factory_count }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ total_responses }}</div>
+                        <div class="stat-label">Всего ответов</div>
+                        <div class="mt-3">
+                            {% set avg_responses = (total_responses/locations|length)|round(1) if locations|length > 0 else 0 %}
+                            <span class="badge bg-info badge-category">
+                                📊 Среднее: {{ avg_responses }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ avg_satisfaction }}/10</div>
+                        <div class="stat-label">Средняя удовлетворенность</div>
+                        <div class="mt-3">
+                            {% if avg_satisfaction >= 8 %}
+                            <span class="badge bg-success badge-category">🎉 Отлично</span>
+                            {% elif avg_satisfaction >= 6 %}
+                            <span class="badge bg-warning badge-category">👍 Хорошо</span>
+                            {% elif avg_satisfaction >= 4 %}
+                            <span class="badge bg-secondary badge-category">😐 Удовлетворительно</span>
+                            {% else %}
+                            <span class="badge bg-danger badge-category">⚠️ Требует улучшений</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card text-center">
+                        <div class="stat-number">{{ (avg_satisfaction * 10)|round(1) }}%</div>
+                        <div class="stat-label">Общий индекс NPS</div>
+                        <div class="mt-3">
+                            {% set nps = avg_satisfaction * 10 %}
+                            <div class="progress progress-custom">
+                                <div class="progress-bar" style="width: {{ nps }}%"></div>
+                            </div>
+                            <small class="text-muted">{{ nps|round(1) }}% удовлетворенности</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- График -->
+            {% if chart %}
+            <div class="chart-container">
+                <h3 class="mb-4">
+                    <i class="fas fa-chart-bar text-primary"></i> 📊 Удовлетворенность по всем локациям
+                </h3>
+                <img src="data:image/png;base64,{{ chart }}" alt="График удовлетворенности" class="chart-img">
+                <div class="row mt-3 text-center">
+                    <div class="col-md-3">
+                        <div class="text-success">
+                            <i class="fas fa-arrow-up"></i> Лучшая: 
+                            {% if locations %}
+                                {% set best = locations|sort(attribute='satisfaction', reverse=true)|first %}
+                                {{ best.name }} ({{ best.satisfaction }}/10)
+                            {% else %}
+                                Нет данных
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-warning">
+                            <i class="fas fa-chart-line"></i> Средняя: {{ avg_satisfaction }}/10
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-danger">
+                            <i class="fas fa-arrow-down"></i> Худшая: 
+                            {% if locations %}
+                                {% set worst = locations|sort(attribute='satisfaction')|first %}
+                                {{ worst.name }} ({{ worst.satisfaction }}/10)
+                            {% else %}
+                                Нет данных
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-info">
+                            <i class="fas fa-bullseye"></i> Цель: 8.5/10
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Детальная таблица -->
+            <div class="chart-container">
+                <h3 class="mb-4">
+                    <i class="fas fa-table text-success"></i> 📋 Подробная информация по локациям
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Локация</th>
+                                <th>Тип</th>
+                                <th>Ответы</th>
+                                <th>Удовлетворенность</th>
+                                <th>Статус</th>
+                                <th>Прогресс</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for location in locations %}
+                            <tr>
+                                <td class="fw-bold">{{ loop.index }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            {% if location.category == 'office' %}
+                                            <i class="fas fa-building text-primary fa-lg"></i>
+                                            {% elif location.category == 'factory' %}
+                                            <i class="fas fa-industry text-success fa-lg"></i>
+                                            {% elif location.category == 'home' %}
+                                            <i class="fas fa-home text-danger fa-lg"></i>
+                                            {% elif location.category == 'warehouse' %}
+                                            <i class="fas fa-warehouse text-warning fa-lg"></i>
+                                            {% else %}
+                                            <i class="fas fa-map-marker text-info fa-lg"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <strong class="d-block">{{ location.name }}</strong>
+                                            <small class="text-muted">ID: LOC{{ "%03d" % loop.index }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if location.category == 'office' %}
+                                    <span class="badge bg-primary badge-category">
+                                        <i class="fas fa-building"></i> Офис
+                                    </span>
+                                    {% elif location.category == 'factory' %}
+                                    <span class="badge bg-success badge-category">
+                                        <i class="fas fa-industry"></i> Завод
+                                    </span>
+                                    {% elif location.category == 'home' %}
+                                    <span class="badge bg-danger badge-category">
+                                        <i class="fas fa-home"></i> Дом. офис
+                                    </span>
+                                    {% elif location.category == 'warehouse' %}
+                                    <span class="badge bg-warning badge-category">
+                                        <i class="fas fa-warehouse"></i> Склад
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-info badge-category">
+                                        <i class="fas fa-map-marker"></i> Другое
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="text-center">
+                                        <div class="fs-5 fw-bold">{{ location.responses }}</div>
+                                        <div class="progress progress-custom mt-2" style="height: 10px;">
+                                            {% if total_responses > 0 %}
+                                                {% set resp_perc = (location.responses / total_responses * 100)|round(1) %}
+                                            {% else %}
+                                                {% set resp_perc = 0 %}
+                                            {% endif %}
+                                            <div class="progress-bar bg-info" style="width: {{ resp_perc }}%"></div>
+                                        </div>
+                                        <small class="text-muted">{{ resp_perc }}% от общего</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-center">
+                                        <div class="display-6 fw-bold" style="color: 
+                                            {% if location.satisfaction >= 8 %}#27ae60
+                                            {% elif location.satisfaction >= 6 %}#f39c12
+                                            {% elif location.satisfaction >= 4 %}#95a5a6
+                                            {% else %}#e74c3c{% endif %};">
+                                            {{ location.satisfaction }}
+                                        </div>
+                                        <div class="progress progress-custom mt-2">
+                                            <div class="progress-bar" style="width: {{ location.satisfaction * 10 }}%"></div>
+                                        </div>
+                                        <small class="text-muted">{{ location.satisfaction * 10 }}% из 100%</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if location.satisfaction >= 8 %}
+                                    <span class="badge bg-success badge-category">
+                                        <i class="fas fa-trophy"></i> Лидер
+                                    </span>
+                                    <div class="mt-2 text-success small">
+                                        <i class="fas fa-check-circle"></i> Превышает цель
+                                    </div>
+                                    {% elif location.satisfaction >= 6 %}
+                                    <span class="badge bg-warning badge-category">
+                                        <i class="fas fa-chart-line"></i> Стабильно
+                                    </span>
+                                    <div class="mt-2 text-warning small">
+                                        <i class="fas fa-bullseye"></i> Близко к цели
+                                    </div>
+                                    {% elif location.satisfaction >= 4 %}
+                                    <span class="badge bg-secondary badge-category">
+                                        <i class="fas fa-exclamation-circle"></i> Требует внимания
+                                    </span>
+                                    <div class="mt-2 text-secondary small">
+                                        <i class="fas fa-hand-paper"></i> Нужны улучшения
+                                    </div>
+                                    {% else %}
+                                    <span class="badge bg-danger badge-category">
+                                        <i class="fas fa-exclamation-triangle"></i> Критично
+                                    </span>
+                                    <div class="mt-2 text-danger small">
+                                        <i class="fas fa-fire"></i> Срочные меры!
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% set improvement = 10 - location.satisfaction %}
+                                    <div class="text-center">
+                                        <div class="fs-4 fw-bold text-{% if improvement <= 2 %}success{% elif improvement <= 3 %}warning{% else %}danger{% endif %}">
+                                            +{{ improvement|round(1) }}
+                                        </div>
+                                        <div class="text-muted small">Потенциал улучшения</div>
+                                        <div class="mt-2">
+                                            {% if improvement <= 2 %}
+                                            <span class="badge bg-success">Минимальный</span>
+                                            {% elif improvement <= 3 %}
+                                            <span class="badge bg-warning">Умеренный</span>
+                                            {% elif improvement <= 4 %}
+                                            <span class="badge bg-danger">Высокий</span>
+                                            {% else %}
+                                            <span class="badge bg-dark">Критический</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-5">
+                                    <i class="fas fa-database fa-3x mb-3"></i>
+                                    <h4>Нет данных о локациях</h4>
+                                    <p>Импортируйте данные через вкладку "Импорт"</p>
+                                    <a href="/import" class="btn btn-primary mt-2">
+                                        <i class="fas fa-file-import"></i> Перейти к импорту
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Футер -->
+            <div class="text-center mt-5 pt-4 border-top">
+                <p class="text-muted">
+                    <i class="fas fa-server"></i> Сервер: 10.65.93.181:5004 |
+                    <i class="fas fa-sync-alt"></i> Автообновление: каждые 15 минут |
+                    <i class="fas fa-map-marker-alt"></i> Локаций: {{ locations|length }} |
+                    <i class="fas fa-users"></i> Ответов: {{ total_responses }}
+                </p>
+                <div class="mt-3">
+                    <button class="btn btn-primary me-2" onclick="window.print()">
+                        <i class="fas fa-print"></i> Печать отчета
+                    </button>
+                    <button class="btn btn-success me-2" onclick="location.reload()">
+                        <i class="fas fa-redo"></i> Обновить данные
+                    </button>
+                    <a href="/import" class="btn btn-warning">
+                        <i class="fas fa-file-import"></i> Импорт данных
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Автообновление каждые 15 минут
+        setTimeout(() => {
+            location.reload();
+        }, 900000);
+        
+        // Подсветка активной вкладки
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
