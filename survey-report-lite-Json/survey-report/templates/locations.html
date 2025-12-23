@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Статистика по локациям</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #007bff; }
+        .back-link:hover { text-decoration: underline; }
+        .total { font-weight: bold; margin: 10px 0; font-size: 16px; }
+        .satisfaction-good { color: #28a745; font-weight: bold; }
+        .satisfaction-medium { color: #ffc107; font-weight: bold; }
+        .satisfaction-poor { color: #dc3545; font-weight: bold; }
+        .no-data { color: #6c757d; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/import" class="back-link">← Назад к импорту</a>
+        <h1>Статистика по локациям</h1>
+        
+        {% if locations %}
+            {% set total_count = 0 %}
+            {% for location in locations %}
+                {% set total_count = total_count + location.response_count %}
+            {% endfor %}
+            <div class="total">Всего ответов: {{ total_count }}</div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Локация</th>
+                        <th>Количество ответов</th>
+                        <th>Средняя удовлетворенность</th>
+                        <th>Уровень</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for location in locations %}
+                    <tr>
+                        <td>{{ location.location_name }}</td>
+                        <td>{{ location.response_count }}</td>
+                        <td>
+                            {% if location.avg_satisfaction %}
+                                {% if location.avg_satisfaction >= 7 %}
+                                    <span class="satisfaction-good">{{ "%.2f"|format(location.avg_satisfaction) }}</span>
+                                {% elif location.avg_satisfaction >= 5 %}
+                                    <span class="satisfaction-medium">{{ "%.2f"|format(location.avg_satisfaction) }}</span>
+                                {% else %}
+                                    <span class="satisfaction-poor">{{ "%.2f"|format(location.avg_satisfaction) }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="no-data">Нет данных</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if location.avg_satisfaction %}
+                                {% if location.avg_satisfaction >= 7 %}
+                                    🟢 Высокий
+                                {% elif location.avg_satisfaction >= 5 %}
+                                    🟡 Средний
+                                {% else %}
+                                    🔴 Низкий
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Нет данных о локациях. Пожалуйста, импортируйте данные опроса.</p>
+        {% endif %}
+        
+        {% if all_locations and all_locations|length > 0 %}
+        <h3>Все доступные локации:</h3>
+        <ul>
+            {% for loc in all_locations %}
+            <li>{{ loc.location_name }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <div style="margin-top: 20px;">
+            <a href="/questions">📈 Перейти к статистике по вопросам</a>
+        </div>
+    </div>
+</body>
+</html>

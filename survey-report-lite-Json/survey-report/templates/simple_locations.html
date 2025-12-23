@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Локации</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Локации</h1>
+    <p><a href="/dashboard">← Назад к статистике</a></p>
+    
+    <table>
+        <tr>
+            <th>Локация</th>
+            <th>Ответов</th>
+        </tr>
+        {% for location in locations %}
+        <tr>
+            <td>{{ location['location_name'] }}</td>
+            <td>{{ location['response_count'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

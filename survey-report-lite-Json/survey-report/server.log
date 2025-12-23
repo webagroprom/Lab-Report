@@ -1,0 +1,6 @@
+nohup: ввод игнорируется
+Сервер запускается на порту 5004...
+ * Serving Flask app 'final_with_charts'
+ * Debug mode: on
+Address already in use
+Port 5004 is in use by another program. Either identify and stop that program, or start the server with a different port.

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика опроса</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .header h1 {
+            color: var(--secondary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .total-responses {
+            background: var(--primary-color);
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: bold;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .section-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .section-total {
+            background: #e9ecef;
+            color: #495057;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-row:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .item-count {
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 60px;
+            text-align: right;
+            margin-right: 15px;
+        }
+        
+        .item-percent {
+            color: #666;
+            min-width: 80px;
+            text-align: right;
+            font-size: 0.95rem;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            border-radius: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .nav-btn:hover {
+            background: var(--secondary-color);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .rating-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .rating-1 { background: #f8d7da; color: #721c24; }
+        .rating-2 { background: #fff3cd; color: #856404; }
+        .rating-3 { background: #d4edda; color: #155724; }
+        .rating-4 { background: #cce5ff; color: #004085; }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Статистика опроса</h1>
+            <p class="subtitle">Опрос удовлетворенности настройкой ПК и сопутствующего ПО</p>
+            <div class="total-responses">
+                📝 Всего ответов: {{ total_responses }}
+            </div>
+        </div>
+        
+        <!-- Локации -->
+        {% if location_stats.locations %}
+        <div class="section-card">
+            <h3>📍 Укажите вашу локацию</h3>
+            <div class="section-total">{{ location_stats.total }} ответов</div>
+            {% for loc in location_stats.locations %}
+            <div class="item-row">
+                <span class="item-name">{{ loc.name }}</span>
+                <span class="item-count">{{ loc.count }}</span>
+                <span class="item-percent">{{ loc.percent }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ loc.percent }}%"></div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Вопросы -->
+        {% for question in questions %}
+        <div class="section-card">
+            <h3>{{ question.title }}</h3>
+            {% if question.subtitle %}
+            <div class="section-subtitle">{{ question.subtitle }}</div>
+            {% endif %}
+            <div class="section-total">{{ question.total }} ответов</div>
+            {% for answer in question.answers %}
+            <div class="item-row">
+                <span class="item-name">{{ answer.text }}</span>
+                <span class="item-count">{{ answer.count }}</span>
+                <span class="item-percent">{{ answer.percent }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ answer.percent }}%"></div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        
+        <!-- Навигация -->
+        <div class="navigation">
+            <a href="/import" class="nav-btn">�� Импорт данных</a>
+            <a href="/locations" class="nav-btn">📍 Локации</a>
+            <a href="/questions" class="nav-btn">❓ Все вопросы</a>
+        </div>
+        
+        <div class="footer">
+            <p>Система анализа опросов • Данные обновлены: {{ update_time }}</p>
+        </div>
+    </div>
+</body>
+</html>

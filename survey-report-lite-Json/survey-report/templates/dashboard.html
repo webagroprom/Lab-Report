@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика опроса</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h1 {
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #555;
+        }
+        .stat-item {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .answer-item {
+            margin: 5px 0;
+            padding: 8px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        .percentage-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+        .percentage-fill {
+            height: 100%;
+            background: #4CAF50;
+            border-radius: 10px;
+        }
+        .count {
+            font-weight: bold;
+            color: #333;
+        }
+        .percentage {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .total {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .chart-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .free-text-response {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            font-style: italic;
+        }
+        .problem-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            border-radius: 3px;
+        }
+        .sub-question {
+            margin-left: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .question-header {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0 5px 0;
+            font-weight: bold;
+        }
+        .location-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: #e8f5e9;
+            border-radius: 3px;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links a:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .notification {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: bold;
+            animation: fadeIn 0.5s;
+        }
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .notification.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .file-status {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-status .file-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .file-status .file-size {
+            color: #666;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .stat-item, .answer-item {
+                padding: 8px;
+            }
+            .nav-links {
+                flex-direction: column;
+            }
+            .nav-links a {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/import">
+                📤 Импорт данных
+            </a>
+            <a href="/api/export/csv">
+                📥 Экспорт CSV
+            </a>
+            <a href="javascript:location.reload()">
+                🔄 Обновить
+            </a>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="notification {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h1>📊 Статистика опроса</h1>
+        <h2>Опрос удовлетворенности настройкой ПК и сопутствующего ПО</h2>
+        
+        <div class="file-status">
+            <div>
+                <span class="file-name">
+                    {% if current_file %}
+                        📁 Файл: {{ current_file|basename }}
+                    {% else %}
+                        ⚠️ Файл данных не загружен
+                    {% endif %}
+                </span>
+            </div>
+            <a href="/import" style="text-decoration: none; color: #4CAF50; font-weight: bold;">
+                {% if current_file %}
+                    🔄 Заменить
+                {% else %}
+                    📤 Загрузить
+                {% endif %}
+            </a>
+        </div>
+        
+        <div class="total">
+            📝 Всего ответов: {{ total_responses }}
+        </div>
+        
+        {% if charts.locations %}
+        <div class="chart-container">
+            <h3>Распределение по локациям</h3>
+            <img src="data:image/png;base64,{{ charts.locations }}" alt="График распределения по локациям">
+        </div>
+        {% endif %}
+        
+        <h3>📍 {{ location_data[0].name if location_data else "Укажите вашу локацию" }}</h3>
+        <div class="total">{{ total_responses }} ответов</div>
+        
+        {% for location in location_data %}
+        <div class="location-item">
+            <strong>{{ location.name }}</strong><br>
+            <span class="count">{{ location.count }}</span>
+            <span class="percentage">{{ location.percentage }}%</span>
+            <div class="percentage-bar">
+                <div class="percentage-fill" style="width: {{ location.percentage }}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        {% for question in questions_data %}
+        <div class="stat-item">
+            <div class="question-header">{{ question.question }}</div>
+            <div class="total">{{ question.total }} ответов</div>
+            
+            {% if question.has_sub_question and question.sub_question %}
+            <div class="sub-question">
+                <strong>{{ question.sub_question }}</strong>
+            </div>
+            {% endif %}
+            
+            {% for answer in question.answers %}
+            <div class="answer-item">
+                <strong>{{ answer.text }}</strong><br>
+                <span class="count">{{ answer.count }}</span>
+                <span class="percentage">{{ answer.percentage }}%</span>
+                <div class="percentage-bar">
+                    <div class="percentage-fill" style="width: {{ answer.percentage }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        
+        {% if problem_data %}
+        <h3>🔧 С какими проблемами вы сталкиваетесь чаще всего?</h3>
+        <div class="total">{{ problem_data|sum(attribute='count') }} ответов</div>
+        
+        {% if charts.problems %}
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ charts.problems }}" alt="График частоты проблем">
+        </div>
+        {% endif %}
+        
+        {% for problem in problem_data %}
+        <div class="problem-item">
+            <strong>{{ problem.problem }}</strong><br>
+            <span class="count">{{ problem.count }}</span>
+            <span class="percentage">{{ problem.percentage }}%</span>
+            <div class="percentage-bar">
+                <div class="percentage-fill" style="width: {{ problem.percentage }}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        {% if free_text_data %}
+        <h3>💡 Свободные ответы</h3>
+        {% for item in free_text_data %}
+        <div class="stat-item">
+            <div class="question-header">{{ item.question }}</div>
+            <div class="total">{{ item.response_count }} ответов</div>
+            
+            {% for response in item.responses %}
+            <div class="free-text-response">{{ response }}</div>
+            {% endfor %}
+            
+            {% if item.has_more %}
+            <div style="text-align: center; margin-top: 10px; color: #666;">
+                ... и еще {{ item.response_count - 10 }} ответов
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        <h3>⭐ Общая удовлетворенность рабочего места</h3>
+        <div class="total">{{ total_responses }} ответов</div>
+        
+        {% if charts.satisfaction %}
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ charts.satisfaction }}" alt="График удовлетворенности">
+        </div>
+        {% endif %}
+        
+        {% for item in satisfaction_data %}
+        <div class="stat-item">
+            <strong>{{ item.score }} баллов</strong><br>
+            <span class="count">{{ item.count }}</span>
+            <span class="percentage">{{ item.percentage }}%</span>
+            <div class="percentage-bar">
+                <div class="percentage-fill" style="width: {{ item.percentage }}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div style="margin-top: 40px; padding: 20px; background: #f0f0f0; border-radius: 5px; text-align: center;">
+            <p>Данные обновлены: {{ now.strftime('%Y-%m-%d %H:%M:%S') if now else 'Н/Д' }}</p>
+            <p>
+                <a href="/api/export/csv" style="margin-right: 10px;">📥 Скачать данные в CSV</a>
+                <a href="/import" style="margin-right: 10px;">📤 Загрузить новый файл</a>
+                <a href="javascript:location.reload()">�� Обновить страницу</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to expand/collapse free text responses
+            const freeTextHeaders = document.querySelectorAll('.question-header');
+            freeTextHeaders.forEach(header => {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    const responses = parent.querySelectorAll('.free-text-response');
+                    responses.forEach(response => {
+                        if (response.style.display === 'none') {
+                            response.style.display = 'block';
+                        } else {
+                            response.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Add animation to percentage bars
+            const percentageBars = document.querySelectorAll('.percentage-fill');
+            percentageBars.forEach(bar => {
+                const originalWidth = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.transition = 'width 1s ease-in-out';
+                    bar.style.width = originalWidth;
+                }, 100);
+            });
+            
+            // Auto-hide notifications after 5 seconds
+            const notifications = document.querySelectorAll('.notification');
+            notifications.forEach(notification => {
+                setTimeout(() => {
+                    notification.style.transition = 'opacity 0.5s';
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 500);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

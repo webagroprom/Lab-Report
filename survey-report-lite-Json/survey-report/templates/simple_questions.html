@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Все вопросы и ответы</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .category-section { 
+            margin-bottom: 40px; 
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .category-title { 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            color: #2c3e50; 
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin-bottom: 15px;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { 
+            background-color: #e8f4fc; 
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        .total-count {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        .answer-count {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        a { 
+            color: #007bff; 
+            text-decoration: none; 
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        a:hover { 
+            text-decoration: none; 
+            background-color: #e9ecef;
+            color: #0056b3;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Детальная статистика по вопросам</h1>
+            <p>Все ответы сгруппированы по категориям вопросов</p>
+        </div>
+        
+        <a href="/dashboard">← Назад к сводной статистике</a>
+        
+        {% set current_category = None %}
+        {% set category_total = 0 %}
+        
+        {% for question in questions %}
+            {% if question['question_category'] != current_category %}
+                {% if current_category is not none %}
+                    <div class="category-total">
+                        Всего ответов в категории: <span class="total-count">{{ category_total }}</span>
+                    </div>
+                    </div>
+                {% endif %}
+                
+                {% set current_category = question['question_category'] %}
+                {% set category_total = 0 %}
+                
+                <div class="category-section">
+                    <div class="category-title">
+                        {{ current_category }}
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="70%">Ответ</th>
+                                <th width="30%">Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            {% endif %}
+            
+            <tr>
+                <td>{{ question['answer_text'] }}</td>
+                <td class="answer-count">{{ question['total_count'] }}</td>
+            </tr>
+            
+            {% set category_total = category_total + question['total_count'] %}
+            
+            {% if loop.last %}
+                        </tbody>
+                    </table>
+                    <div class="category-total">
+                        Всего ответов в категории: <span class="total-count">{{ category_total }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</body>
+</html>
