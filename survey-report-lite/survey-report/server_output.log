@@ -1,0 +1,69 @@
+Сервер запускается на порту 5004...
+ * Serving Flask app 'final_with_charts'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5004
+ * Running on http://10.65.93.181:5004
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 465-143-262
+127.0.0.1 - - [23/Dec/2025 10:56:09] "[32mGET / HTTP/1.1[0m" 302 -
+10.65.227.230 - - [23/Dec/2025 10:56:13] "[32mGET / HTTP/1.1[0m" 302 -
+10.65.227.230 - - [23/Dec/2025 10:56:13] "GET /import HTTP/1.1" 200 -
+10.65.227.230 - - [23/Dec/2025 10:56:24] "POST /import_json HTTP/1.1" 200 -
+10.65.227.230 - - [23/Dec/2025 10:56:39] "[35m[1mGET /questions HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/survey-report/final_with_charts.py", line 323, in questions
+    questions_data = conn.execute('''
+                     ^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: question_stats
+10.65.227.230 - - [23/Dec/2025 10:56:39] "[36mGET /questions?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+10.65.227.230 - - [23/Dec/2025 10:56:39] "[36mGET /questions?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+10.65.227.230 - - [23/Dec/2025 10:56:39] "[36mGET /questions?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+10.65.227.230 - - [23/Dec/2025 10:56:59] "[35m[1mGET /locations HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/www/survey-report/final_with_charts.py", line 303, in locations
+    locations_data = conn.execute('''
+                     ^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: survey_responses
+10.65.227.230 - - [23/Dec/2025 10:56:59] "[36mGET /locations?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+10.65.227.230 - - [23/Dec/2025 10:56:59] "[36mGET /locations?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+10.65.227.230 - - [23/Dec/2025 10:57:00] "[36mGET /locations?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -

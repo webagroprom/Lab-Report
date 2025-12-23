@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Статистика по вопросам</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .back-link { display: inline-block; margin-bottom: 20px; }
+        .score { font-weight: bold; }
+        .score-1 { color: #dc3545; }
+        .score-2 { color: #ffc107; }
+        .score-3 { color: #28a745; }
+        .score-4 { color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/import" class="back-link">← Назад к импорту</a>
+        <h1>Статистика по вопросам</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Вопрос</th>
+                    <th>Средняя оценка</th>
+                    <th>Количество ответов</th>
+                    <th>Уровень</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                <tr>
+                    <td>{{ question.name }}</td>
+                    <td>
+                        <span class="score score-{{ question.avg_score|int }}">
+                            {{ "%.2f"|format(question.avg_score) }}
+                        </span>
+                    </td>
+                    <td>{{ question.count }}</td>
+                    <td>
+                        {% if question.avg_score >= 3 %}
+                            🟢 Хорошо
+                        {% elif question.avg_score >= 2 %}
+                            🟡 Приемлемо
+                        {% else %}
+                            🔴 Плохо
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 20px;">
+            <h4>Легенда оценок:</h4>
+            <p><span class="score score-1">1</span> - Плохо</p>
+            <p><span class="score score-2">2</span> - Приемлемо/Удовлетворительно</p>
+            <p><span class="score score-3">3</span> - Хорошо/Удобно</p>
+            <p><span class="score score-4">4</span> - Отлично</p>
+        </div>
+    </div>
+</body>
+</html>

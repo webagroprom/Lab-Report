@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Импорт данных опроса</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="file"] { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #0056b3; }
+        .message { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .form-section { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Импорт данных опроса</h1>
+        
+        <div class="form-section">
+            <h3>Импорт JSON файла опроса</h3>
+            <form action="/import_json" method="post" enctype="multipart/form-data">
+                <label for="json_file">Выберите JSON файл с данными опроса:</label>
+                <input type="file" id="json_file" name="json_file" accept=".json" required>
+                <button type="submit">Импортировать JSON</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h3>Импорт данных локаций (Excel)</h3>
+            <form action="/import_locations" method="post" enctype="multipart/form-data">
+                <label for="locations_file">Выберите Excel файл с локациями:</label>
+                <input type="file" id="locations_file" name="locations_file" accept=".xlsx,.xls" required>
+                <button type="submit">Импортировать локации</button>
+            </form>
+        </div>
+
+        {% if message %}
+        <div class="message {{ message_type }}">
+            {{ message }}
+            {% if details %}
+            <details>
+                <summary>Подробности</summary>
+                <pre>{{ details }}</pre>
+            </details>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="info">
+            <h4>Информация:</h4>
+            <ul>
+                <li>Для импорта данных опроса используйте JSON файл</li>
+                <li>После импорта данные будут доступны на страницах статистики</li>
+                <li>Файл локаций должен быть в формате Excel (XLSX/XLS)</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="/locations" style="margin-right: 20px;">📊 Просмотр локаций</a> 
+            <a href="/questions">📈 Просмотр вопросов</a>
+        </div>
+    </div>
+</body>
+</html>
